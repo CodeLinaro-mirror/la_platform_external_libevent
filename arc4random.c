@@ -59,7 +59,7 @@
 #include <sys/param.h>
 #include <sys/time.h>
 #ifdef _EVENT_HAVE_SYS_SYSCTL_H
-#include <sys/sysctl.h>
+#include <linux/sysctl.h>
 #endif
 #endif
 #include <limits.h>
