@@ -173,7 +173,7 @@ arc4_seed_win32(void)
 static int
 arc4_seed_sysctl_linux(void)
 {
-      #sysctl no longer exists for glibc > 2
+      // sysctl no longer exists for glibc > 2
       return -1;
 }
 #endif
