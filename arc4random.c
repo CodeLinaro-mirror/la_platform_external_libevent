@@ -173,35 +173,8 @@ arc4_seed_win32(void)
 static int
 arc4_seed_sysctl_linux(void)
 {
-	/* Based on code by William Ahern, this function tries to use the
-	 * RANDOM_UUID sysctl to get entropy from the kernel.  This can work
-	 * even if /dev/urandom is inaccessible for some reason (e.g., we're
-	 * running in a chroot). */
-	int mib[] = { CTL_KERN, KERN_RANDOM, RANDOM_UUID };
-	unsigned char buf[ADD_ENTROPY];
-	size_t len, n;
-	unsigned i;
-	int any_set;
-
-	memset(buf, 0, sizeof(buf));
-
-	for (len = 0; len < sizeof(buf); len += n) {
-		n = sizeof(buf) - len;
-
-		if (0 != sysctl(mib, 3, &buf[len], &n, NULL, 0))
-			return -1;
-	}
-	/* make sure that the buffer actually got set. */
-	for (i=0,any_set=0; i<sizeof(buf); ++i) {
-		any_set |= buf[i];
-	}
-	if (!any_set)
-		return -1;
-
-	arc4_addrandom(buf, sizeof(buf));
-	evutil_memclear_(buf, sizeof(buf));
-	arc4_seeded_ok = 1;
-	return 0;
+      // sysctl no longer exists for glibc > 2
+      return -1;
 }
 #endif
 
@@ -493,6 +466,7 @@ arc4random(void)
 }
 #endif
 
+#ifndef HAVE_ARC4RANDOM_BUF
 ARC4RANDOM_EXPORT void
 arc4random_buf(void *_buf, size_t n)
 {
@@ -506,6 +480,7 @@ arc4random_buf(void *_buf, size_t n)
 	}
 	_ARC4_UNLOCK();
 }
+#endif
 
 #ifndef ARC4RANDOM_NOUNIFORM
 /*

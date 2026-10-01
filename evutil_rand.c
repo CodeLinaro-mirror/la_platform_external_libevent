@@ -121,7 +121,12 @@ static void *arc4rand_lock;
 #define ARC4RANDOM_NOSTIR
 #define ARC4RANDOM_NORANDOM
 #define ARC4RANDOM_NOUNIFORM
-
+#if defined(__GLIBC__) && \
+    (__GLIBC__ > 2 || (__GLIBC__ == 2 && __GLIBC_MINOR__ >= 36))
+#  ifndef HAVE_ARC4RANDOM_BUF
+#    define HAVE_ARC4RANDOM_BUF 1
+#  endif
+#endif
 #include "./arc4random.c"
 
 #ifndef _EVENT_DISABLE_THREAD_SUPPORT
